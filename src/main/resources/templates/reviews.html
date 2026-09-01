@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="sv">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Utvärderingar</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        
+        <!-- Link to static CSS file -->
+        <link rel="stylesheet" th:href="@{/styles.css}">
+
+        <!-- Inline fallback styles -->
+        
+    </head>
+    <body>
+        
+        <nav style="margin-bottom: 2rem;">
+            <a th:href="@{/}"><strong>Lägg till projekt</strong></a> |
+            <a th:href="@{/search}"><strong>Sök</strong></a> |
+            <a th:href="@{/reviews}"><strong>Alla utvärderingar</strong></a>
+        </nav>
+
+        <h1>Utvärderingar</h1>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>KundId</th>
+                    <th>KonsultId</th>
+                    <th>Datum</th>
+                    <th>Konsult informerad</th>
+
+                    <th>Resultatbetyg</th>
+                    <th>Ansvarbetyg</th>
+                    <th>Enkelhetbetyg</th>
+                    <th>Glädjebetyg</th>
+
+                    <th>Resultat</th>
+                    <th>Ansvar</th>
+                    <th>Enkelhet</th>
+                    <th>Glädje</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="reviews : ${reviews}">
+                    <td th:text="${reviews.id}">1</td>
+                    <td th:text="${reviews.customerId}">2</td>
+                    <td th:text="${reviews.consultantId}">3</td>
+                    <td th:text="${reviews.date}">Datum</td>
+                    
+                    <td>
+                        <span th:class="${reviews.consultantInformed != null and reviews.consultantInformed} ? 'badge badge-true' : 'badge badge-false'"
+                              th:text="${reviews.consultantInformed != null and reviews.consultantInformed} ? 'Ja' : 'Nej'">
+                        </span>
+                    </td>
+
+                    <td><div th:replace="~{::starRating(${reviews.resultScore})}"></div></td>
+                    <td><div th:replace="~{::starRating(${reviews.responsibilityScore})}"></div></td>
+                    <td><div th:replace="~{::starRating(${reviews.simplicityScore})}"></div></td>
+                    <td><div th:replace="~{::starRating(${reviews.joyScore})}"></div></td>
+
+                    <td th:text="${reviews.result}">Resultat</td>
+                    <td th:text="${reviews.responsibility}">Ansvar</td>
+                    <td th:text="${reviews.simplicity}">Enkelhet</td>
+                    <td th:text="${reviews.joy}">Glädje</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- Reusable star fragment -->
+        <div th:fragment="starRating(score)">
+            <div class="stars" th:if="${score != null}">
+                <span th:each="i : ${#numbers.sequence(1, 5)}"
+                      th:class="${i <= score} ? 'star-filled' : 'star-empty'"
+                      th:text="${i <= score} ? '★' : '☆'">
+                </span>
+            </div>
+            <span th:if="${score == null}" style="color: #94a3b8;"></span>
+        </div>
+    </body>
+</html>

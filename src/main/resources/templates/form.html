@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nytt Projekt</title>
+    <link rel="stylesheet" th:href="@{/styles.css}">
+</head>
+<body>
+
+<h2>Kvalitetsuppföljning</h2>
+
+<form th:action="@{/form/add}" method="post">
+    <!-- Hidden inputs preserving Step 1 values -->
+        <input type="hidden" name="customer" th:value="${review.customer}">
+        <input type="hidden" name="consultant" th:value="${review.consultant}">
+        <input type="hidden" name="salesPerson" th:value="${review.salesPerson}">
+        <input type="hidden" name="date" th:value="${review.date}">
+        <input type="hidden" name="consultantInformed" th:value="${review.consultantInformed}">
+    <!-- 1. result -->
+    <label><strong>Resultat:</strong></label><br>
+    <label><i>Kompetens, levererar, kvalitet, tid</i></label><br>
+    <div class="star-rating">
+        <input type="radio" id="res-5" name="resultScore" value="5">
+        <label for="res-5" title="5 stjärnor">★</label>
+        
+        <input type="radio" id="res-4" name="resultScore" value="4">
+        <label for="res-4" title="4 stjärnor">★</label>
+        
+        <input type="radio" id="res-3" name="resultScore" value="3" checked>
+        <label for="res-3" title="3 stjärnor">★</label>
+        
+        <input type="radio" id="res-2" name="resultScore" value="2">
+        <label for="res-2" title="2 stjärnor">★</label>
+        
+        <input type="radio" id="res-1" name="resultScore" value="1">
+        <label for="res-1" title="1 stjärna">★</label>
+    </div><br>
+    <label for="result">Övrig kommentar:</label><br>
+    <textarea id="result" name="result" rows="2" cols="40"></textarea><br><br>
+    
+    <!-- 2. responsibility -->
+    <label><strong>Ansvar:</strong></label><br>
+    <label><i>Samarbete, hjälper & frågar, står för åtaganden, flaggar</i></label><br>
+    <div class="star-rating">
+        <input type="radio" id="ans-5" name="responsibilityScore" value="5">
+        <label for="ans-5" title="5 stjärnor">★</label>
+        
+        <input type="radio" id="ans-4" name="responsibilityScore" value="4">
+        <label for="ans-4" title="4 stjärnor">★</label>
+        
+        <input type="radio" id="ans-3" name="responsibilityScore" value="3" checked>
+        <label for="ans-3" title="3 stjärnor">★</label>
+        
+        <input type="radio" id="ans-2" name="responsibilityScore" value="2">
+        <label for="ans-2" title="2 stjärnor">★</label>
+        
+        <input type="radio" id="ans-1" name="responsibilityScore" value="1">
+        <label for="ans-1" title="1 stjärna">★</label>
+    </div><br>
+    <label for="responsibility">Övrig kommentar:</label><br>
+    <textarea id="responsibility" name="responsibility" rows="2" cols="40"></textarea><br><br>
+
+    <!-- 3. simplicity -->
+    <label><strong>Simplicity:</strong></label><br>
+    <label><i>Gör det svåra enkelt, enkel kommunikation</i></label><br>
+    <div class="star-rating">
+        <input type="radio" id="enk-5" name="simplicityScore" value="5">
+        <label for="enk-5" title="5 stjärnor">★</label>
+        
+        <input type="radio" id="enk-4" name="simplicityScore" value="4">
+        <label for="enk-4" title="4 stjärnor">★</label>
+        
+        <input type="radio" id="enk-3" name="simplicityScore" value="3" checked>
+        <label for="enk-3" title="3 stjärnor">★</label>
+        
+        <input type="radio" id="enk-2" name="simplicityScore" value="2">
+        <label for="enk-2" title="2 stjärnor">★</label>
+        
+        <input type="radio" id="enk-1" name="simplicityScore" value="1">
+        <label for="enk-1" title="1 stjärna">★</label>
+    </div><br>
+    <label for="simplicity">Övrig kommentar:</label><br>
+    <textarea id="simplicity" name="simplicity" rows="2" cols="40"></textarea><br><br>
+
+    <!-- 4. Glädje -->
+    <label><strong>Glädje:</strong></label><br>
+    <label><i>Tillför energi, kul att jobba med</i></label><br>
+    <div class="star-rating">
+        <input type="radio" id="gla-5" name="joyScore" value="5">
+        <label for="gla-5" title="5 stjärnor">★</label>
+        
+        <input type="radio" id="gla-4" name="joyScore" value="4">
+        <label for="gla-4" title="4 stjärnor">★</label>
+        
+        <input type="radio" id="gla-3" name="joyScore" value="3" checked>
+        <label for="gla-3" title="3 stjärnor">★</label>
+        
+        <input type="radio" id="gla-2" name="joyScore" value="2">
+        <label for="gla-2" title="2 stjärnor">★</label>
+        
+        <input type="radio" id="gla-1" name="joyScore" value="1">
+        <label for="gla-1" title="1 stjärna">★</label>
+    </div><br>
+    <label for="joy">Övrig kommentar:</label><br>
+    <textarea id="joy" name="joy" rows="2" cols="40"></textarea><br><br>
+
+    <button type="submit">Skicka Formulär</button>
+</form>
+
+<br>
+
+</body>
+</html>
