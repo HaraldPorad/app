@@ -2,10 +2,15 @@ package com.example.demo.model.ProjectModel;
 
 import java.util.List;
 
+import com.example.demo.model.SalesPeopleModel.SalesPerson;
+
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -16,32 +21,32 @@ public class Project {
     private Long id;
 
     private String customer;
-    private Long salesPersonId;
-    private List<Long> consultantIds;
+
+    // Projects point to their sales contact
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "sales_person_id")
+    private SalesPerson salesPerson;
+
 
     public Project() {}
 
-    public Project(String customer, Long salesPersonId, List<Long> consultantIds) { 
+    public Project(String customer, SalesPerson salesPerson) { 
         this.customer = customer;
-        this.salesPersonId = salesPersonId;
-        this.consultantIds = consultantIds;
+        this.salesPerson = salesPerson;
 
     }
 
     @Override
     public String toString() {
-        return String.format("Project[id=%d, customer='%s', salesPerson='%s', consultant='%s']",
-                     id, customer, salesPersonId, consultantIds);
+        return String.format("Project[id=%d, customer='%s', salesPerson='%s']",
+                     id, customer, salesPerson);
     }
 
     public Long getId() { return id; }
     public String getCustomer() { return customer; }
-    public Long getSalesPersonId() { return salesPersonId; }
-    public List<Long> getConsultantIds() { return consultantIds; }
+    public SalesPerson getSalesPerson() { return salesPerson; }
 
     public void setId(Long id) { this.id = id; }
     public void setCustomer(String customer) { this.customer = customer; }
-    public void setSalesPerson(Long salesPersonId) { this.salesPersonId = salesPersonId; }
-    public void setConsultants(List<Long> consultantIds) { this.consultantIds = consultantIds; }
-    // public void addConsultant(Long consultantId) { this.consultantIds.add(consultantId); }
+    public void setSalesPerson(SalesPerson salesPerson) { this.salesPerson = salesPerson; }
 }
