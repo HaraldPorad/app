@@ -2,10 +2,16 @@ package com.example.demo.model.ReviewModel;
 
 import java.time.LocalDate;
 
+import com.example.demo.model.ConsultantModel.Consultant;
+import com.example.demo.model.ProjectModel.Project;
+
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -13,11 +19,17 @@ import jakarta.persistence.Table;
 public class Review {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-
     private Long id;
-    private Long projectId;
-    private Long customerId;
-    private Long consultantId;  
+
+    // Many reviews belong to One Project
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "project_id")
+    private Project project;
+
+    // Many reviews belong to One Consultant
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "consultant_id")
+    private Consultant consultant;
 
     private final LocalDate date = LocalDate.now();
     private Boolean consultantInformed = false;
@@ -35,9 +47,8 @@ public class Review {
     public Review () {}
 
         public Review(
-        Long projectId,
-        Long customerId,
-        Long consultantId,
+        Project project,
+        Consultant consultant,
         
         Integer resultScore,
         Integer responsibilityScore,
@@ -49,9 +60,8 @@ public class Review {
         String simplicity,
         String joy
     ) {
-        this.projectId = projectId;
-        this.customerId = customerId;
-        this.consultantId = consultantId;
+        this.project = project;
+        this.consultant = consultant;
 
         this.resultScore = resultScore;
         this.responsibilityScore = responsibilityScore;
@@ -67,15 +77,14 @@ public class Review {
     @Override
     public String toString() {
         return String.format(
-            "Review[id=%d, projectId='%s', date='%s', consultantInformed='%s', result='%s',responsibility='%s',simplicity='%s', joy='%s']",
-            id, projectId, date, consultantInformed, result, responsibility, simplicity, joy);
+            "Review[id=%d, project='%s', consultant='%s',date='%s', consultantInformed='%s', result='%s',responsibility='%s',simplicity='%s', joy='%s']",
+            id, project, consultant, date, consultantInformed, result, responsibility, simplicity, joy);
     }
 
     // Review getters
     public Long getId() { return id; }
-    public Long getProjectId() { return projectId; }
-    public Long getConsultantId() { return consultantId; }
-    public Long getCustomerId() { return customerId; }
+    public Project getProject() { return project; }
+    public Consultant getConsultant() { return consultant; }
     
     public LocalDate getDate() { return date; }
     public Boolean getConsultantInformed() { return consultantInformed != null && consultantInformed; }
@@ -92,9 +101,8 @@ public class Review {
 
     // Review setters
     public void setId(Long id) { this.id = id; }
-    public void setProjectId(Long projectId) {this.projectId = projectId; }
-    public void setConsultantId(Long consultantId) { this.consultantId = consultantId; }
-    public void setCustomerId(Long customerId) { this.customerId = customerId; }
+    public void setProject(Project project) {this.project = project; }
+    public void setConsultant(Consultant consultant) { this.consultant = consultant; }
 
     public void setConsultantInformed(Boolean setConsultantInformed) { this.consultantInformed = (consultantInformed != null) ? consultantInformed : false; }
 
