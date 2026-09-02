@@ -63,23 +63,24 @@ public class DataInitializer {
                     SalesPerson s = new SalesPerson();
 
                     s.setName(salesPeople.get(random.nextInt(salesPeople.size())));
+                    salesRepository.save(s);
 
                     Consultant c = new Consultant();
-
                     c.setName(consultants.get(random.nextInt(consultants.size())));
                     c.setManager(s.getId());
+                    consultantRepository.save(c);
 
                     Project p = new Project();
-
                     p.setCustomer(customers.get(random.nextInt(customers.size())));
                     p.setSalesPerson(s.getId());
                     //p.addConsultant(c.getId());
+                    projectRepository.save(p);
  
                     
                     Review r = new Review();
                     r.setProjectId(p.getId());
                     r.setConsultantId(c.getId());
-                    r.setCustomerId(r.getId());
+                    r.setCustomerId(p.getId());
                     r.setConsultantInformed(random.nextBoolean());
 
                     // Random scores between 1 and 5
@@ -93,10 +94,7 @@ public class DataInitializer {
                     r.setResponsibility(comments.get(random.nextInt(comments.size())));
                     r.setSimplicity(comments.get(random.nextInt(comments.size())));
                     r.setJoy(comments.get(random.nextInt(comments.size())));
-                    
-                    salesRepository.save(s);
-                    consultantRepository.save(c);
-                    projectRepository.save(p);
+
                     reviewRepository.save(r);
 
                 }

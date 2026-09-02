@@ -42,8 +42,8 @@
             <tbody>
                 <tr th:each="review : ${reviews}">
                     <td th:text="${review.id}">1</td>
-                    <td th:text="${review.customer}">Kund</td>
-                    <td th:text="${review.consultant}">Konsult</td>
+                    <td th:text="${review.customerId}">Kund</td>
+                    <td th:text="${review.consultantId}">Konsult</td>
                     <td th:text="${review.date}">Datum</td>
                     <td><div th:replace="~{::starRating(${review.resultScore})}"></div></td>
                     <td><div th:replace="~{::starRating(${review.responsibilityScore})}"></div></td>
