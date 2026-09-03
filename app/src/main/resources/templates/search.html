@@ -1,0 +1,70 @@
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <title>Sök Projekt</title>
+    <link rel="stylesheet" th:href="@{/styles.css}">
+</head>
+<body>
+    <nav style="margin-bottom: 2rem;">
+        <a th:href="@{/}"><strong>Lägg till projekt</strong></a> |
+        <a th:href="@{/search}"><strong>Sök</strong></a> |
+        <a th:href="@{/reviews}"><strong>Alla utvärderingar</strong></a>
+    </nav>
+
+    <h2>Sök och filtrera projekt</h2>
+    
+    <!-- Filter Form -->
+    <form th:action="@{/search}" method="get" style="display: flex; gap: 10px; margin-bottom: 1.5rem;">
+        <input type="text" name="customer" th:value="${customer}" placeholder="Sök kund...">
+        <input type="text" name="consultant" th:value="${consultant}" placeholder="Sök konsult...">
+        <button type="submit">Filtrera</button>
+        <a th:href="@{/search}" style="padding: 8px 12px; background: #e2e8f0; text-decoration: none; border-radius: 4px;">Rensa</a>
+    </form>
+
+    <!-- Filtered Results Table -->
+    <div th:if="${not #lists.isEmpty(reviews)}">
+        <h3>Resultat (<span th:text="${#lists.size(reviews)}">0</span>)</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Kund</th>
+                    <th>Konsult</th>
+                    <th>Datum</th>
+                    <th>Resultat</th>
+                    <th>Ansvar</th>
+                    <th>Enkelhet</th>
+                    <th>Glädje</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="review : ${reviews}">
+                    <td th:text="${review.id}">1</td>
+                    <td th:text="${review.project.customer}">Kund</td>
+                    <td th:text="${review.consultant.name}">Konsult</td>
+                    <td th:text="${review.date}">Datum</td>
+                    <td><div th:replace="~{::starRating(${review.resultScore})}"></div></td>
+                    <td><div th:replace="~{::starRating(${review.responsibilityScore})}"></div></td>
+                    <td><div th:replace="~{::starRating(${review.simplicityScore})}"></div></td>
+                    <td><div th:replace="~{::starRating(${review.joyScore})}"></div></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <p th:if="${customer != null and #lists.isEmpty(reviews)}" style="color: #64748b;">
+        Inga projekt matchade din sökning.
+    </p>
+
+    <div th:fragment="starRating(score)">
+        <div class="stars" th:if="${score != null}">
+            <span th:each="i : ${#numbers.sequence(1, 5)}"
+                  th:class="${i <= score} ? 'star-filled' : 'star-empty'"
+                  th:text="${i <= score} ? '★' : '☆'"></span>
+        </div>
+        <span th:if="${score == null}"></span>
+    </div>
+</body>
+</html>
