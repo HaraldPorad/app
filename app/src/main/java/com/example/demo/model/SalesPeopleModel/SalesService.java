@@ -29,7 +29,7 @@ public class SalesService {
     }
 
     public List<SalesPerson> getAllSalesPeople() {
-        return salesRepository.findAll();
+        return salesRepository.findAllUniqueByName();
     }
 
 }

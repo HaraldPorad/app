@@ -1,14 +1,23 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 export default function NewReviewPage() {
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
 
+  // Dropdown options loaded from backend
+  const [salesPeople, setSalesPeople] = useState([]);
+  const [projects, setProjects] = useState([]);
+  const [consultants, setConsultants] = useState([]);
+
+  // Loading states
+  const [loadingProjects, setLoadingProjects] = useState(false);
+  const [loadingConsultants, setLoadingConsultants] = useState(false);
+
   const [formData, setFormData] = useState({
+    salesPerson: '',
     customer: '',
     consultant: '',
-    salesPerson: '',
     date: new Date().toISOString().split('T')[0],
     consultantInformed: false,
     resultScore: 3,
@@ -23,6 +32,60 @@ export default function NewReviewPage() {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState(null);
+
+  // 1. Initial Load: Fetch all sales people
+  useEffect(() => {
+    fetch('/api/sales')
+      .then((res) => res.json())
+      .then((data) => setSalesPeople(data))
+      .catch((err) => console.error('Kunde inte hämta säljare:', err));
+  }, []);
+
+  // 2. Cascade: When a salesperson changes, fetch their filtered projects & consultants
+  const handleSalesPersonChange = (e) => {
+    const selectedSalesId = e.target.value;
+    const selectedPerson = salesPeople.find((sp) => String(sp.id) === selectedSalesId);
+
+    // Reset downstream selections
+    setFormData((prev) => ({
+      ...prev,
+      salesPerson: selectedPerson ? selectedPerson.name : '',
+      customer: '',
+      consultant: ''
+    }));
+
+    if (!selectedSalesId) {
+      setProjects([]);
+      setConsultants([]);
+      return;
+    }
+
+    // Fetch projects belonging to this salesperson
+    setLoadingProjects(true);
+    fetch(`/api/projects?salesPersonId=${selectedSalesId}`)
+      .then((res) => res.json())
+      .then((data) => {
+        setProjects(data);
+        setLoadingProjects(false);
+      })
+      .catch((err) => {
+        console.error('Kunde inte hämta projekt:', err);
+        setLoadingProjects(false);
+      });
+
+    // Fetch consultants managed by this salesperson
+    setLoadingConsultants(true);
+    fetch(`/api/consultants?salesPersonId=${selectedSalesId}`)
+      .then((res) => res.json())
+      .then((data) => {
+        setConsultants(data);
+        setLoadingConsultants(false);
+      })
+      .catch((err) => {
+        console.error('Kunde inte hämta konsulter:', err);
+        setLoadingConsultants(false);
+      });
+  };
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -42,7 +105,7 @@ export default function NewReviewPage() {
   const handleNextStep = (e) => {
     e.preventDefault();
     if (!formData.customer || !formData.consultant || !formData.salesPerson || !formData.date) {
-      setError('Vänligen fyll i alla obligatoriska fält.');
+      setError('Vänligen välj alla obligatoriska fält.');
       return;
     }
     setError(null);
@@ -101,48 +164,91 @@ export default function NewReviewPage() {
         </div>
       )}
 
-      {/* STEP 1: Basic Info */}
+      {/* STEP 1: Cascading Dropdowns */}
       {step === 1 && (
-        <form onSubmit={handleNextStep} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+        <form onSubmit={handleNextStep} style={{ display: 'flex', flexDirection: 'column', gap: '1.2rem' }}>
+          
+          {/* 1. Säljare */}
           <div>
-            <label style={{ display: 'block', fontWeight: 'bold', marginBottom: '4px' }}>Kund:</label>
-            <input
-              type="text"
+            <label style={{ display: 'block', fontWeight: 'bold', marginBottom: '4px' }}>Säljare:</label>
+            <select
+              onChange={handleSalesPersonChange}
+              required
+              defaultValue=""
+              style={{ width: '100%', padding: '8px', borderRadius: '4px', border: '1px solid #cbd5e1' }}
+            >
+              <option value="" disabled>-- Välj ansvarig säljare --</option>
+              {salesPeople.map((sp) => (
+                <option key={sp.id} value={sp.id}>{sp.name}</option>
+              ))}
+            </select>
+          </div>
+
+          {/* 2. Kund / Projekt (Filtered) */}
+          <div>
+            <label style={{ display: 'block', fontWeight: 'bold', marginBottom: '4px' }}>Kund / Projekt:</label>
+            <select
               name="customer"
               value={formData.customer}
               onChange={handleChange}
-              placeholder="T.ex. Spotify"
+              disabled={!formData.salesPerson || loadingProjects}
               required
-              style={{ width: '100%', padding: '8px', borderRadius: '4px', border: '1px solid #cbd5e1' }}
-            />
+              style={{
+                width: '100%',
+                padding: '8px',
+                borderRadius: '4px',
+                border: '1px solid #cbd5e1',
+                background: !formData.salesPerson ? '#f1f5f9' : '#fff'
+              }}
+            >
+              <option value="" disabled>
+                {!formData.salesPerson
+                  ? '-- Välj säljare först --'
+                  : loadingProjects
+                  ? 'Hämtar projekt...'
+                  : projects.length === 0
+                  ? 'Inga projekt kopplade till säljaren'
+                  : '-- Välj kund --'}
+              </option>
+              {projects.map((proj) => (
+                <option key={proj.id} value={proj.customer}>{proj.customer}</option>
+              ))}
+            </select>
           </div>
 
+          {/* 3. Konsult (Filtered) */}
           <div>
             <label style={{ display: 'block', fontWeight: 'bold', marginBottom: '4px' }}>Konsult:</label>
-            <input
-              type="text"
+            <select
               name="consultant"
               value={formData.consultant}
               onChange={handleChange}
-              placeholder="T.ex. Erik Sandlöv"
+              disabled={!formData.salesPerson || loadingConsultants}
               required
-              style={{ width: '100%', padding: '8px', borderRadius: '4px', border: '1px solid #cbd5e1' }}
-            />
+              style={{
+                width: '100%',
+                padding: '8px',
+                borderRadius: '4px',
+                border: '1px solid #cbd5e1',
+                background: !formData.salesPerson ? '#f1f5f9' : '#fff'
+              }}
+            >
+              <option value="" disabled>
+                {!formData.salesPerson
+                  ? '-- Välj säljare först --'
+                  : loadingConsultants
+                  ? 'Hämtar konsulter...'
+                  : consultants.length === 0
+                  ? 'Inga konsulter kopplade till säljaren'
+                  : '-- Välj konsult --'}
+              </option>
+              {consultants.map((c) => (
+                <option key={c.id} value={c.name}>{c.name}</option>
+              ))}
+            </select>
           </div>
 
-          <div>
-            <label style={{ display: 'block', fontWeight: 'bold', marginBottom: '4px' }}>Säljare:</label>
-            <input
-              type="text"
-              name="salesPerson"
-              value={formData.salesPerson}
-              onChange={handleChange}
-              placeholder="T.ex. Anna Lind"
-              required
-              style={{ width: '100%', padding: '8px', borderRadius: '4px', border: '1px solid #cbd5e1' }}
-            />
-          </div>
-
+          {/* 4. Datum & Informerad */}
           <div>
             <label style={{ display: 'block', fontWeight: 'bold', marginBottom: '4px' }}>Datum:</label>
             <input
@@ -155,27 +261,18 @@ export default function NewReviewPage() {
             />
           </div>
 
-          <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', margin: '4px 0' }}>
-            <input
-              type="checkbox"
-              name="consultantInformed"
-              checked={formData.consultantInformed}
-              onChange={handleChange}
-            />
-            Konsult informerad
-          </label>
-
           <button
             type="submit"
+            disabled={!formData.salesPerson || !formData.customer || !formData.consultant}
             style={{
-              marginTop: '1rem',
+              marginTop: '0.8rem',
               padding: '10px 16px',
-              background: '#2563eb',
+              background: (!formData.salesPerson || !formData.customer || !formData.consultant) ? '#94a3b8' : '#2563eb',
               color: '#fff',
               border: 'none',
               borderRadius: '4px',
               fontWeight: '600',
-              cursor: 'pointer'
+              cursor: (!formData.salesPerson || !formData.customer || !formData.consultant) ? 'not-allowed' : 'pointer'
             }}
           >
             Fortsätt till Betyg &rarr;
@@ -183,11 +280,9 @@ export default function NewReviewPage() {
         </form>
       )}
 
-      {/* STEP 2: Ratings & Feedback */}
+      {/* STEP 2: Ratings */}
       {step === 2 && (
         <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-          
-          {/* Resultat */}
           <div>
             <label><strong>Resultat:</strong> <i>(Kompetens, levererar, kvalitet, tid)</i></label>
             {renderStarInput('resultScore', formData.resultScore)}
@@ -201,7 +296,6 @@ export default function NewReviewPage() {
             />
           </div>
 
-          {/* Ansvar */}
           <div>
             <label><strong>Ansvar:</strong> <i>(Samarbete, hjälper & frågar, står för åtaganden, flaggar)</i></label>
             {renderStarInput('responsibilityScore', formData.responsibilityScore)}
@@ -215,7 +309,6 @@ export default function NewReviewPage() {
             />
           </div>
 
-          {/* Enkelhet */}
           <div>
             <label><strong>Enkelhet:</strong> <i>(Gör det svåra enkelt, enkel kommunikation)</i></label>
             {renderStarInput('simplicityScore', formData.simplicityScore)}
@@ -229,7 +322,6 @@ export default function NewReviewPage() {
             />
           </div>
 
-          {/* Glädje */}
           <div>
             <label><strong>Glädje:</strong> <i>(Tillför energi, kul att jobba med)</i></label>
             {renderStarInput('joyScore', formData.joyScore)}
