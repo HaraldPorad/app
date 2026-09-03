@@ -26,8 +26,8 @@
             <thead>
                 <tr>
                     <th>ID</th>
-                    <th>KundId</th>
-                    <th>KonsultId</th>
+                    <th>Kund</th>
+                    <th>Konsult</th>
                     <th>Datum</th>
                     <th>Konsult informerad</th>
 
@@ -45,8 +45,8 @@
             <tbody>
                 <tr th:each="reviews : ${reviews}">
                     <td th:text="${reviews.id}">1</td>
-                    <td th:text="${reviews.customerId}">2</td>
-                    <td th:text="${reviews.consultantId}">3</td>
+                    <td th:text="${reviews.project.customer}">Kund</td>
+                    <td th:text="${reviews.consultant.name}">Konsult</td>
                     <td th:text="${reviews.date}">Datum</td>
                     
                     <td>
