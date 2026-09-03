@@ -12,7 +12,8 @@ public interface ReviewRepository extends JpaRepository<Review, Long>{
     List<Review> findByProjectId(Long projectId);
 
     @Query("""
-            SELECT r FROM Review r
+            SELECT r 
+            FROM Review r
             LEFT JOIN FETCH r.consultant
             LEFT JOIN FETCH r.project p
             LEFT JOIN FETCH p.salesPerson

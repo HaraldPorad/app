@@ -11,6 +11,12 @@ public interface ConsultantRepository extends JpaRepository<Consultant, Long>{
     List<Consultant> findByManagerId(Long managerId);
     List<Consultant> findByProjectId(Long projectId);
 
-    @Query("SELECT C FROM Consultant c LEFT JOIN FETCH c.project LEFT JOIN c.manager")
+    @Query("""
+        SELECT 
+            c 
+        FROM Consultant c 
+        LEFT JOIN FETCH c.project 
+        LEFT JOIN FETCH c.manager
+        """)
     List<Consultant> findAllWithDetails();
 }

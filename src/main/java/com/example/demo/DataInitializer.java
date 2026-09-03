@@ -60,27 +60,28 @@ public class DataInitializer {
 
                 for (int i = 0; i < 25; i++) {
 
-                    SalesPerson s = new SalesPerson();
+                    SalesPerson s = new SalesPerson(); // Create sales with random name and save to salesrepo
 
                     s.setName(salesPeople.get(random.nextInt(salesPeople.size())));
                     salesRepository.save(s);
 
-                    Consultant c = new Consultant();
+                    Consultant c = new Consultant(); // Create consultant and set name, manager and save to repo
                     c.setName(consultants.get(random.nextInt(consultants.size())));
-                    c.setManager(s.getId());
+                    c.setManager(s);
                     consultantRepository.save(c);
 
-                    Project p = new Project();
+                    Project p = new Project(); // Create project, set customer, salesperson and save to repo
                     p.setCustomer(customers.get(random.nextInt(customers.size())));
-                    p.setSalesPerson(s.getId());
-                    //p.addConsultant(c.getId());
+                    p.setSalesPerson(s);
+
                     projectRepository.save(p);
+
+                    c.setProject(p); //assign consultant to project
  
-                    
+                    // Create and set review parameters
                     Review r = new Review();
-                    r.setProjectId(p.getId());
-                    r.setConsultantId(c.getId());
-                    r.setCustomerId(p.getId());
+                    r.setProject(p);
+                    r.setConsultant(c);
                     r.setConsultantInformed(random.nextBoolean());
 
                     // Random scores between 1 and 5

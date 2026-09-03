@@ -12,7 +12,12 @@ public interface ProjectRepository extends JpaRepository<Project, Long>{
     List<Project> findByCustomer(String name);
     List<Project> findBySalesPersonId(Long SalesPersonId);
 
-    @Query("SELECT p FROM Project p LEFT JOIN FETCH p.salesPerson")
+    @Query("""
+            SELECT 
+                p 
+            FROM Project p 
+            LEFT JOIN FETCH p.salesPerson
+            """)
     List<Project> findAllWithSalesPerson();
 
     @Query("SELECT p FROM Project p LEFT JOIN FETCH p.salesPerson WHERE p.id = :id")
