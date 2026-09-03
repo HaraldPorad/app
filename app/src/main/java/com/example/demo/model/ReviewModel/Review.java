@@ -31,7 +31,7 @@ public class Review {
     @JoinColumn(name = "consultant_id")
     private Consultant consultant;
 
-    private final LocalDate date = LocalDate.now();
+    private LocalDate date = LocalDate.now();
     private Boolean consultantInformed = false;
 
     private Integer resultScore;
