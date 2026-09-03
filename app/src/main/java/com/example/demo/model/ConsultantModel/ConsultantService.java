@@ -31,7 +31,7 @@ public class ConsultantService {
         return consultantRepository.findByName(consultantName);
     }
 
-    public List<Consultant> FilterByManagerId(Long managerId) {
+    public List<Consultant> getByManagerId(Long managerId) {
         return consultantRepository.findByManagerId(managerId);
     }
 

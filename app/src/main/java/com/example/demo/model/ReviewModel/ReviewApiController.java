@@ -1,13 +1,9 @@
-package com.example.demo.controller;
+package com.example.demo.model.ReviewModel;
 
 import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import com.example.demo.model.ReviewModel.Review;
-import com.example.demo.model.ReviewModel.ReviewDto;
-import com.example.demo.model.ReviewModel.ReviewService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.PostMapping;

@@ -28,4 +28,8 @@ public class SalesService {
         salesRepository.save(salesPerson);
     }
 
+    public List<SalesPerson> getAllSalesPeople() {
+        return salesRepository.findAll();
+    }
+
 }
