@@ -40,5 +40,12 @@ public class ReviewService {
     public List<Review> getReviewsByProject(Long projectId) {
         return reviewRepository.findByProjectId(projectId);
     }
+
+    public List<Review> searchReviews(String customer, String consultant) {
+        String cleanCustomer = (customer != null && !customer.isBlank()) ? customer.trim() : null;
+        String cleanConsultant = (consultant != null && !consultant.isBlank()) ? consultant.trim() : null;
+
+        return reviewRepository.searchReviews(cleanCustomer, cleanConsultant);
+    }
 }
 

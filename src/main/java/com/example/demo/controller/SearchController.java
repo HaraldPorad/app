@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import java.util.List;
+import java.util.ArrayList;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -37,13 +38,9 @@ public class SearchController {
             @RequestParam(required = false) String consultant, // filtrera alla reviews en viss konsult har
             Model model) {
 
-            
-            //projects = projectService.filterByCustomer(customer);
-
-
-            //model.addAttribute("reviews", retrievedReviews);
-            //model.addAttribute("kund", customer);
-            //model.addAttribute("konsult", consultant);
+            model.addAttribute("reviews", reviewService.searchReviews(customer, consultant));
+            model.addAttribute("kund", customer);
+            model.addAttribute("konsult", consultant);
 
         return "search";
     }
