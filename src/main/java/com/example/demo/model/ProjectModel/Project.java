@@ -1,7 +1,5 @@
 package com.example.demo.model.ProjectModel;
 
-import java.util.List;
-
 import com.example.demo.model.SalesPeopleModel.SalesPerson;
 
 import jakarta.persistence.Entity;

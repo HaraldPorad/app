@@ -1,6 +1,8 @@
 package com.example.demo.model.SalesPeopleModel;
 
 import java.util.List;
+import java.util.Optional;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,16 +15,17 @@ public class SalesService {
         this.salesRepository = salesRepository;
     }
 
+    public Optional<SalesPerson> getById(long id) {
+        return salesRepository.findById(id);
+    }
+
+    public List<SalesPerson> getByName(String name) {
+        return salesRepository.findByName(name);
+    }
+
     @Transactional
     public void saveSalesPerson(SalesPerson salesPerson) {
         salesRepository.save(salesPerson);
     }
 
-    public List<SalesPerson> FilterById(long id) {
-        return salesRepository.findById(id);
-    }
-
-    public List<SalesPerson> FilterByName(String name) {
-        return salesRepository.findByName(name);
-    }
 }

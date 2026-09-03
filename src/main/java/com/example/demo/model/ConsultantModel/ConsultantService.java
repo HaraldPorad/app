@@ -1,5 +1,6 @@
 package com.example.demo.model.ConsultantModel;
 
+import java.util.Optional;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,11 +19,15 @@ public class ConsultantService {
         consultantRepository.save(consultant);
     }
 
-    public List<Consultant> FilterByConsultantId(long consultantId) {
+    public List<Consultant> getAllConsultants() {
+        return consultantRepository.findAllWithDetails();
+    }
+
+    public Optional<Consultant> getByConsultantId(long consultantId) {
         return consultantRepository.findById(consultantId);
     }
     
-    public List<Consultant> FilterByConsultantName(String consultantName) {
+    public List<Consultant> getByConsultantName(String consultantName) {
         return consultantRepository.findByName(consultantName);
     }
 

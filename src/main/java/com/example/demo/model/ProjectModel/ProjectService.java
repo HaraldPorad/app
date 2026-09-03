@@ -1,11 +1,13 @@
 package com.example.demo.model.ProjectModel;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional(readOnly = true)
 public class ProjectService {
 
     private final ProjectRepository projectRepository;
@@ -19,20 +21,19 @@ public class ProjectService {
         projectRepository.save(project);
     }
 
-    public List<Project> FilterByProjectId(long projectId) {
-        return projectRepository.findById(projectId);
+    public List<Project> getAllProjects() {
+        return projectRepository.findAllWithSalesPerson();
     }
 
-    public List<Project> FilterByCustomer(String name) {
+    public Optional<Project> getProjectById(Long projectId) {
+        return projectRepository.findByIdWithSalesPerson(projectId);
+    }
+
+    public List<Project> getByCustomer(String name) {
         return projectRepository.findByCustomer(name);
     }
 
-    public List<Project> FilterBySalesPersonId(Long salesPersonId) {
+    public List<Project> getProjectsBySalesPersonId(Long salesPersonId) {
         return projectRepository.findBySalesPersonId(salesPersonId);
     }
-
-    //public List<Project> FilterByConsultantId(Long consultantId) {
-    //    return projectRepository.findByConsultantId(consultantId);
-    //}
-
 }
