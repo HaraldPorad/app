@@ -31,7 +31,7 @@ public class Review {
     @JoinColumn(name = "consultant_id")
     private Consultant consultant;
 
-    private LocalDate date = LocalDate.now();
+    private LocalDate date;
     private Boolean consultantInformed = false;
 
     private Integer resultScore;
@@ -50,6 +50,8 @@ public class Review {
         Project project,
         Consultant consultant,
         
+        LocalDate date,
+
         Integer resultScore,
         Integer responsibilityScore,
         Integer simplicityScore,
@@ -62,6 +64,8 @@ public class Review {
     ) {
         this.project = project;
         this.consultant = consultant;
+
+        this.date = date;
 
         this.resultScore = resultScore;
         this.responsibilityScore = responsibilityScore;
@@ -103,6 +107,8 @@ public class Review {
     public void setId(Long id) { this.id = id; }
     public void setProject(Project project) {this.project = project; }
     public void setConsultant(Consultant consultant) { this.consultant = consultant; }
+
+    public void setDate(LocalDate date) { this.date = date; }
 
     public void setConsultantInformed(Boolean setConsultantInformed) { this.consultantInformed = (consultantInformed != null) ? consultantInformed : false; }
 

@@ -33,10 +33,10 @@ export default function SearchPage() {
     }
   };
 
-  // Initial fetch on page mount
-  useEffect(() => {
-    fetchReviews();
-  }, []);
+  //// Initial fetch on page mount
+  //useEffect(() => {
+  //  fetchReviews();
+  //}, []);
 
   const handleSearch = (e) => {
     e.preventDefault();

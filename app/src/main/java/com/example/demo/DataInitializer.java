@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
@@ -84,9 +85,17 @@ public class DataInitializer {
                     SalesPerson manager = assignedProj.getSalesPerson();
                     savedConsultants.add(consultantRepository.save(new Consultant(consName, manager, assignedProj)));
                 }
+                LocalDate startDate = LocalDate.of(2025, 1, 1);
+                long start = startDate.toEpochDay();
 
+                LocalDate endDate = LocalDate.now();
+                long end = endDate.toEpochDay();
+                
+                
                 // 4. Seed Reviews linking the generated consultants and projects
                 for (int i = 0; i < 40; i++) {
+
+                    long randomEpochDate = ThreadLocalRandom.current().nextLong(start, end);
                     Consultant c = savedConsultants.get(random.nextInt(savedConsultants.size()));
                     Project p = c.getProject();
 
@@ -95,6 +104,8 @@ public class DataInitializer {
                     r.setConsultant(c);
 
                     r.setConsultantInformed(random.nextBoolean());
+
+                    r.setDate(LocalDate.ofEpochDay(randomEpochDate));
 
                     r.setResultScore(random.nextInt(5) + 1);
                     r.setResponsibilityScore(random.nextInt(5) + 1);
