@@ -6,6 +6,7 @@ export default function Navbar() {
       <Link to="/new" style={{ fontWeight: 'bold', textDecoration: 'none', color: '#2563eb' }}>Lägg till projekt</Link>
       <Link to="/search" style={{ fontWeight: 'bold', textDecoration: 'none', color: '#2563eb' }}>Sök</Link>
       <Link to="/reviews" style={{ fontWeight: 'bold', textDecoration: 'none', color: '#2563eb' }}>Alla utvärderingar</Link>
+      <Link to="/admin" style={{ fontWeight: 'bold', textDecoration: 'none', color: '#2563eb' }}>Hantera data</Link>
     </nav>
   );
 }

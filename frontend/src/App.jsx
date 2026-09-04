@@ -4,6 +4,7 @@ import SearchPage from './pages/SearchPage';
 import OverviewPage from './pages/OverviewPage';
 import NewReviewPage from './pages/NewReviewPage';
 import SuccessPage from './pages/SuccessPage';
+import AdminManagementPage from './pages/AdminManagementPage';
 
 export default function App() {
   return (
@@ -16,6 +17,7 @@ export default function App() {
           <Route path="/search" element={<SearchPage />} />
           <Route path="/reviews" element={<OverviewPage />} />
           <Route path="/success" element={<SuccessPage />} />
+          <Route path="/admin" element={<AdminManagementPage />} />
         </Routes>
       </div>
     </BrowserRouter>
